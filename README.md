@@ -6,6 +6,10 @@ The **Safety Stock Tool Recommendation Model** is a Python-based tool designed f
 
 The tool is integrated with a frontend built using **Tailwind CSS** and rendered using **Plotly.js** for interactive graphs, providing visual insights into inventory levels, safety stock, and replenishment cycles.
 
+## Demo
+
+![Safety Stock Tool Demo](/static/SS_Tool_Demo.png)
+
 ## Features
 
 - **Safety Stock Calculation**: Computes safety stock based on a desired service level, lead time, and historical consumption.
