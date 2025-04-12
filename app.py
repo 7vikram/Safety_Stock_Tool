@@ -127,7 +127,7 @@ def handle_calculate_inventory_metrics():
         )
 
         logging.debug(f"Calculation result: {result}")
-        return jsonify(result)
+        return jsonify(result), 200
 
     except ValueError as ve:
         logging.error(f"ValueError: {ve}")
