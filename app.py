@@ -115,24 +115,26 @@ logging.basicConfig(level=logging.DEBUG)
 @app.route("/calculate-inventory-metrics/", methods=["POST"])
 def calculate():
     try:
-        # Get input data from the form
-        service_level = float(request.form["service_level"])
-        lead_time = int(request.form["lead_time"])
-        historical_consumption = request.form["historical_consumption"]
-        future_demand = request.form["future_demand"]
-        current_inventory = request.form["current_inventory"]
-        moving_average_window = request.form["moving_average_window"]
-        moq = request.form["moq"]
-        
-        logging.debug(f"Input data: {request.form}")
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No JSON data received."}), 400
 
-        # Perform calculations
+        service_level = float(data["service_level"])
+        lead_time = int(data["lead_time"])
+        historical_consumption = data["historical_consumption"]
+        future_demand = data["future_demand"]
+        current_inventory = data["current_inventory"]
+        moving_average_window = data["moving_average_window"]
+        moq = data["moq"]
+
+        logging.debug(f"Input data: {data}")
+
         result = calculate_inventory_metrics(
             service_level, lead_time, historical_consumption, future_demand, current_inventory, moving_average_window, moq
         )
         logging.debug(f"Calculation result: {result}")
-        # Return results as JSON
         return jsonify(result)
+
     except ValueError as ve:
         logging.error(f"ValueError: {ve}")
         return jsonify({"error": str(ve)}), 400
