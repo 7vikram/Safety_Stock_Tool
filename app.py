@@ -4,6 +4,9 @@ import numpy as np
 import pandas as pd
 from scipy.stats import norm
 import plotly.graph_objects as go
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 CORS(app)
@@ -106,6 +109,8 @@ def calculate_inventory_metrics(service_level, lead_time, historical_consumption
 def index():
     return render_template("index.html")
 
+logging.basicConfig(level=logging.DEBUG)
+
 @app.route("/calculate-inventory-metrics/", methods=["POST"])
 def calculate():
     try:
@@ -117,17 +122,21 @@ def calculate():
         current_inventory = request.form["current_inventory"]
         moving_average_window = request.form["moving_average_window"]
         moq = request.form["moq"]
+        
+        logging.debug(f"Input data: {request.form}")
 
         # Perform calculations
         result = calculate_inventory_metrics(
             service_level, lead_time, historical_consumption, future_demand, current_inventory, moving_average_window, moq
         )
-
+        logging.debug(f"Calculation result: {result}")
         # Return results as JSON
         return jsonify(result)
     except ValueError as ve:
+        logging.error(f"ValueError: {ve}")
         return jsonify({"error": str(ve)}), 400
     except Exception as e:
+        logging.error(f"Unexpected error: {e}")
         return jsonify({"error": "An unexpected error occurred."}), 500
 
 if __name__ == "__main__":
