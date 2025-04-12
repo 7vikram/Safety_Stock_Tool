@@ -6,3 +6,4 @@ scipy==1.11.0
 plotly==5.12.0
 tailwindcss
 gunicorn
+Werkzeug==2.2.3
