@@ -147,14 +147,20 @@
             e.preventDefault();
 
             const formData = new FormData(e.target);
+            const jsonData = Object.fromEntries(formData.entries());
+
             try {
                 const response = await fetch("/calculate-inventory-metrics/", {
                     method: "POST",
-                    body: formData
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(jsonData)
                 });
 
                 if (!response.ok) {
-                    throw new Error("Failed to calculate metrics. Please try again.");
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Failed to calculate metrics. Please check your inputs.");
                 }
 
                 const data = await response.json();
@@ -167,10 +173,10 @@
                 document.getElementById("stockout-ss-min").textContent = (data.stockout_prob_ss_min * 100).toFixed(2) + "%";
                 document.getElementById("stockout-ss-max").textContent = (data.stockout_prob_ss_max * 100).toFixed(2) + "%";
 
-                const graphElement = document.getElementById("graph");
-                Plotly.newPlot(graphElement, JSON.parse(data.graph));
+                Plotly.newPlot("graph", JSON.parse(data.graph));
 
                 document.getElementById("results-section").classList.remove("hidden");
+
             } catch (error) {
                 Swal.fire("Error", error.message, "error");
             }

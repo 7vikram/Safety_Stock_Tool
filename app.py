@@ -17,8 +17,8 @@ CORS(app)
 def calculate_inventory_metrics(service_level, lead_time, historical_consumption, future_demand, current_inventory, moving_average_window, moq):
     try:
         # Parse input data
-        hist_data = np.array(list(map(float, historical_consumption.split(","))))
-        future_data = np.array(list(map(float, future_demand.split(","))))
+        hist_data = np.array(historical_consumption)
+        future_data = np.array(future_demand)
         current_inventory = float(current_inventory)
         moving_average_window = int(moving_average_window)
         moq = float(moq)
@@ -109,19 +109,16 @@ def index():
 
 # Calculation route for JSON input
 @app.route("/calculate-inventory-metrics/", methods=["POST"])
-def calculate():
+def handle_calculate_inventory_metrics():
     try:
-        data = request.get_json()
-        if not data:
-            raise ValueError("No JSON payload received.")
-
+        data = request.get_json()  # JSON payload
         service_level = float(data["service_level"])
         lead_time = int(data["lead_time"])
-        historical_consumption = data["historical_consumption"]
-        future_demand = data["future_demand"]
-        current_inventory = data["current_inventory"]
-        moving_average_window = data["moving_average_window"]
-        moq = data["moq"]
+        historical_consumption = list(map(float, data["historical_consumption"].split(",")))
+        future_demand = list(map(float, data["future_demand"].split(",")))
+        current_inventory = int(data["current_inventory"])
+        moving_average_window = int(data["moving_average_window"])
+        moq = int(data["moq"])
 
         logging.debug(f"Input JSON: {data}")
 
