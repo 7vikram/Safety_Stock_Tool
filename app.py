@@ -5,6 +5,7 @@ import pandas as pd
 from scipy.stats import norm
 import plotly.graph_objects as go
 import logging
+import os
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -140,4 +141,6 @@ def calculate():
         return jsonify({"error": "An unexpected error occurred."}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Use dynamic port for Render
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
