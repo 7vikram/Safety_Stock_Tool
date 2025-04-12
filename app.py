@@ -140,7 +140,3 @@ def calculate():
         logging.error(f"Unexpected error: {e}")
         return jsonify({"error": "An unexpected error occurred."}), 500
 
-if __name__ == "__main__":
-    # Use dynamic port for Render
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
